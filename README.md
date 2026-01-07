@@ -64,7 +64,7 @@ If approved → process continues, if rejected → product is returned
 
 Clone the repository
 
-git clone https://github.com/your-username/recyclo.git
+git clone https://github.com/yashgithub2003/Recyclo.git
 cd recyclo
 
 
