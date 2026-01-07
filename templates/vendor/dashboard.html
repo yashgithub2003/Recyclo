@@ -1,0 +1,373 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vendor Dashboard — E-Waste Management</title>
+
+  <style>
+    /* === Base Variables === */
+    :root{
+      --accent-1: #00d4a6;
+      --accent-2: #00b4d8;
+      --card-bg: rgba(6, 30, 40, 0.75);
+      --card-bg-2: rgba(2, 45, 59, 0.85);
+      --glow: rgba(0, 212, 166, 0.28);
+      --muted: rgba(255,255,255,0.75);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(135deg, #0077b6 0%, #00b4d8 35%, #00a896 100%, #02c39a 120%);
+      background-size: 400% 400%;
+      animation: bgMove 10s ease infinite;
+      color: #e6f6f1;
+    }
+    @keyframes bgMove {
+      0% { background-position: 0% 50% }
+      50% { background-position: 100% 50% }
+      100% { background-position: 0% 50% }
+    }
+
+    /* === Layout === */
+    .app {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    /* === Sidebar === */
+    .sidebar {
+      background: linear-gradient(180deg, rgba(1,20,30,0.65), rgba(2,30,45,0.75));
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(3,15,22,0.35);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      min-height: calc(100vh - 56px);
+    }
+
+    .brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .brand .logo {
+      width:44px; height:44px; border-radius:10px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(0,180,216,0.14);
+    }
+    .brand h3 { margin:0; font-size:16px; letter-spacing:0.2px; color: #dff8ef; }
+
+    .nav {
+      display:flex; flex-direction:column; gap:6px; margin-top:6px;
+    }
+    .nav a {
+      display:flex; gap:12px; align-items:center;
+      padding:10px 12px; border-radius:10px;
+      color:var(--muted); text-decoration:none; font-weight:600;
+      transition: all .18s ease;
+    }
+    .nav a:hover { transform: translateX(6px); color:#fff; background: rgba(255,255,255,0.03); }
+
+    .nav .active {
+      background: linear-gradient(90deg, rgba(0,180,216,0.08), rgba(0,212,166,0.03));
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0,180,216,0.06);
+    }
+
+    .sidebar .small { font-size:12px; color:rgba(255,255,255,0.6); margin-top:auto; }
+
+    /* === Topbar === */
+    .topbar {
+      grid-column: 1 / -1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom: 6px;
+    }
+    .topbar h1 { margin:0; font-size:18px; color:#f0fff8; }
+
+    .btn-logout {
+      background: linear-gradient(90deg, #ff6b6b, #ff4d4d);
+      color: white; border: none; padding:10px 14px; border-radius:10px;
+      cursor:pointer; font-weight:700; text-decoration:none;
+      box-shadow: 0 8px 22px rgba(255,77,77,0.12);
+    }
+    .btn-logout:hover { transform: translateY(-2px); }
+
+    /* === Main === */
+    .main { display:flex; flex-direction:column; gap:18px; }
+
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(3,22,30,0.75), rgba(1,12,20,0.6));
+      border-radius:12px;
+      padding:18px;
+      box-shadow: 0 10px 30px rgba(3,15,20,0.35);
+      min-height:90px;
+    }
+    .card h4 { margin:0; font-size:13px; color: #bfeee0; font-weight:700; }
+    .card p { margin:8px 0 0; font-size:22px; font-weight:800; color: #e9fff7; }
+
+    .glow-number {
+      color: #eafff6;
+      text-shadow: 0 0 8px rgba(0,212,166,0.12), 0 0 20px rgba(0,180,216,0.06);
+      font-weight:900; font-size:22px;
+    }
+
+    /* Profile card */
+    .profile {
+      background: linear-gradient(180deg, rgba(2,30,45,0.9), rgba(4,50,65,0.85));
+      border-radius:12px;
+      padding:22px;
+      box-shadow: 0 18px 50px rgba(3,15,20,0.35);
+      display:flex; gap:18px; align-items:center;
+    }
+    .avatar {
+      width:88px; height:88px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(0,180,216,0.12), rgba(0,212,166,0.12));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900; color:#dff8ef; font-size:28px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .profile .meta h2 { margin:0; font-size:20px; color:#f7fff9; }
+    .profile .meta p { margin:6px 0 0; color:#c7f7e9; font-weight:600; font-size:14px; }
+
+    .details {
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:10px;
+      color:#bfeee0;
+      font-weight:600;
+      font-size:13px;
+    }
+    .details .label { opacity:0.75; font-size:12px; color:#98e9d1; }
+
+    /* === Activities Section === */
+    .activities {
+      background: rgba(3,25,35,0.6);
+      border-radius:12px;
+      padding:20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-top:10px;
+    }
+
+    .activities h3 {
+      margin-top:0;
+      color:#bfeee0;
+      font-size:16px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .activity-list {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .activity-item {
+      padding:14px;
+      border-radius:10px;
+      background: linear-gradient(90deg, rgba(0,212,166,0.05), rgba(0,180,216,0.08));
+      border-left: 4px solid var(--accent-2);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+    }
+
+    .activity-item strong {
+      color:#eafff6;
+      font-weight:700;
+    }
+
+    .activity-item small {
+      display:block;
+      color:#9feee3;
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .footer {
+      color: rgba(255,255,255,0.65);
+      text-align:center; margin-top:10px; font-size:13px;
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; padding:18px; }
+      .grid { grid-template-columns: repeat(2,1fr); }
+      .profile { flex-direction:column; align-items:flex-start; gap:12px; }
+    }
+    @media (max-width:640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>AI-Powered E-Waste Management</h1>
+        <div style="font-size:12px; color:rgba(255,255,255,0.8); margin-top:4px;">Vendor Dashboard</div>
+      </div>
+    </div>
+    <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <h3>Smart E-Waste</h3>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'vendor_dashboard' %}" class="active">Dashboard</a>
+        <a href="{% url 'ewaste_req' %}">Ewaste Requests</a>
+        <a href="{% url 'delivered_ewaste' %}">Delivered Ewaste</a>
+        <a href="{% url 'approved_reports' %}">Accepted Ewaste</a>
+        <a href="{% url 'rejected_reports' %}">Rejected Ewaste</a>
+
+
+      </nav>
+      <div class="small">
+        Logged in as<br><strong>{{ vendor.contact_person }}</strong>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- Profile -->
+      <section class="profile card">
+            <div class="avatar">{{ vendor.contact_person|first|upper }}</div>
+            <div class="meta">
+                <h2>{{ vendor.company_name }}</h2>
+                <p class="muted">
+                    Contact: {{ vendor.contact_person }} • {{ vendor.user.email }}
+                </p>
+                <div class="details">
+                    <div>
+                        <div class="label">Business Address</div>
+                        {{ vendor.business_address }}
+                    </div>
+                    <div>
+                        <div class="label">Phone</div>
+                        {{ vendor.user.phone_number }}
+                    </div>
+                    <div>
+                        <div class="label">Verified</div>
+                        {{ vendor.is_verified|yesno:"Yes,No" }}
+                    </div>
+                    <div>
+                        <div class="label">Joined On</div>
+                        {{ vendor.created_at|date:"M d, Y" }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+      <!-- Stats -->
+      <section class="grid">
+
+    <div class="card">
+        <h4>Company Name</h4>
+        <p class="glow-number">{{ vendor.company_name }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Contact Person</h4>
+        <p class="glow-number">{{ vendor.contact_person }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Email</h4>
+        <p class="glow-number">{{ vendor.user.email }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Phone</h4>
+        <p class="glow-number">{{ vendor.user.phone_number }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Business Address</h4>
+        <p class="glow-number" style="font-size:14px;">
+            {{ vendor.business_address }}
+        </p>
+    </div>
+
+    <div class="card">
+        <h4>Verified Status</h4>
+        <p class="glow-number">
+            {% if vendor.is_verified %}
+                Verified
+            {% else %}
+                Pending Verification
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="card">
+        <h4>Registered On</h4>
+        <p class="glow-number">
+            {{ vendor.created_at|date:"M d, Y H:i" }}
+        </p>
+    </div>
+
+</section>
+
+
+      <!-- Profile Summary -->
+   
+      <!-- Activities Section -->
+      <section class="activities">
+        <h3>Recent Activities</h3>
+
+        <div class="activity-list">
+
+            {% for req in latest_requests %}
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px; padding: 15px; border: 1px solid #ddd; border-radius: 10px;">
+
+                <!-- LEFT : IMAGE -->
+                <div style="flex: 1;">
+                    <img src="{{ req.photo.url }}" 
+                        alt="E-waste Image" 
+                        style="width: 100%; max-width: 250px; border-radius: 10px;">
+                </div>
+
+                <!-- RIGHT : DETAILS -->
+                <div style="flex: 2;">
+                    <p><strong>Customer Name:</strong> {{ req.user.get_full_name|default:req.user.email }}</p>
+                    <p><strong>E-Waste Type:</strong> {{ req.caption }}</p>
+                    <p><strong>Date:</strong> {{ req.created_at|date:"M d, Y H:i" }}</p>
+                    <p><strong>Location:</strong> {{ req.location_name }}</p>
+                </div>
+
+            </div>
+            {% empty %}
+            <p>No recent e-waste requests found.</p>
+            {% endfor %}
+
+        </div>
+
+        </section>
+
+      <div class="footer">© 2025 AI-Powered E-Waste Management System — Smart Sustainability</div>
+    </main>
+  </div>
+</body>
+</html>

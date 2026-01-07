@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recyclo - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2196F3, #4CAF50);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #2196F3;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2196F3, #4CAF50);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .links a {
+            color: #2196F3;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-home">← Home</a>
+    
+    <div class="login-box">
+        <div class="login-header">
+            <div class="logo">♻️ Recyclo</div>
+            <h2>Collector Login</h2>
+        </div>
+
+        <form id="loginForm" method="post" action="{% url 'collector_login' %}">
+            {% csrf_token %}
+            {% if error %}
+                <div class="error" style="display:block; margin-bottom:1rem;">{{ error }}</div>
+            {% endif %}
+            
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="email" name="email" placeholder="Enter email">
+                <div class="error" id="emailError">Please enter valid email</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="password" name="password" placeholder="Enter password">
+                <div class="error" id="passwordError">Please enter password</div>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+
+        <div class="links">
+            <a href="{% url 'collector_register' %}">Create Account</a>
+            <a href="#" onclick="showDemo()">Demo Login</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactNo').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            // Hide previous errors
+            document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+
+            let contactNo = document.getElementById('contactNo').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let password = document.getElementById('password').value.trim();
+
+            let isValid = true;
+
+            if (contactNo.length !== 10) {
+                document.getElementById('contactError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (email.length < 3 || !email.includes('@')) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Only prevent submission if form is invalid
+            if (!isValid) e.preventDefault();
+        });
+
+        function showDemo() {
+            document.getElementById('contactNo').value = '9876543210';
+            document.getElementById('email').value = 'demo@gmail.com';
+            document.getElementById('password').value = 'demo123';
+        }
+    </script>
+</body>
+</html>
+
+ 

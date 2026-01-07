@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reject Report - E-Waste Management</title>
+
+<style>
+:root{
+  --primary:#00d4a6;
+  --secondary:#00b4d8;
+  --danger:#ef4444;
+}
+
+body{
+  font-family:system-ui;
+  background:linear-gradient(135deg,#0077b6,#00b4d8,#02c39a);
+  background-size:300% 300%;
+  animation:bg 12s ease infinite;
+  color:#fff;
+  margin:0;
+  padding:40px 20px;
+  min-height:100vh;
+}
+
+@keyframes bg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.container{
+  max-width:600px;
+  margin:0 auto;
+}
+
+/* Back Button */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 20px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  margin-bottom:24px;
+  transition:all 0.3s;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.back-btn:hover{
+  background:rgba(255,255,255,.25);
+  transform:translateX(-4px);
+}
+
+/* Card */
+.card{
+  background:rgba(17,24,39,.95);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:36px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.1);
+  animation:slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.card h2{
+  margin:0 0 10px 0;
+  font-size:32px;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.card .subtitle{
+  color:#94a3b8;
+  margin-bottom:28px;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* Form */
+.form-group{
+  margin-bottom:24px;
+}
+
+.form-label{
+  display:block;
+  margin-bottom:10px;
+  color:#c8fff2;
+  font-weight:600;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.form-label .required{
+  color:var(--danger);
+  margin-left:4px;
+}
+
+.form-textarea{
+  width:100%;
+  padding:16px;
+  border-radius:12px;
+  border:2px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  font-size:15px;
+  font-family:system-ui;
+  min-height:140px;
+  resize:vertical;
+  transition:all 0.3s;
+  backdrop-filter:blur(5px);
+}
+
+.form-textarea::placeholder{
+  color:rgba(255,255,255,.4);
+}
+
+.form-textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+  background:rgba(255,255,255,.08);
+  box-shadow:0 0 0 4px rgba(0,212,166,.15);
+}
+
+.char-counter{
+  text-align:right;
+  font-size:13px;
+  color:#94a3b8;
+  margin-top:8px;
+}
+
+.char-counter.warning{
+  color:#fbbf24;
+}
+
+.char-counter.error{
+  color:var(--danger);
+}
+
+/* Alert */
+.alert{
+  padding:14px 18px;
+  border-radius:10px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  animation:fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.alert-warning{
+  background:rgba(251,191,36,.15);
+  border:2px solid rgba(251,191,36,.3);
+  color:#fbbf24;
+}
+
+.alert-info{
+  background:rgba(0,180,216,.15);
+  border:2px solid rgba(0,180,216,.3);
+  color:#00b4d8;
+}
+
+/* Buttons */
+.button-group{
+  display:flex;
+  gap:12px;
+  margin-top:28px;
+}
+
+.btn{
+  flex:1;
+  padding:14px 24px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:15px;
+  text-align:center;
+  transition:all 0.3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  border:none;
+  text-decoration:none;
+}
+
+.btn-danger{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(239,68,68,.3);
+}
+
+.btn-danger:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(239,68,68,.5);
+}
+
+.btn-danger:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.btn-secondary{
+  background:rgba(255,255,255,.1);
+  color:#fff;
+  border:2px solid rgba(255,255,255,.2);
+}
+
+.btn-secondary:hover{
+  background:rgba(255,255,255,.15);
+  transform:translateY(-2px);
+}
+
+/* Loading State */
+.btn-loading{
+  position:relative;
+  pointer-events:none;
+}
+
+.btn-loading::after{
+  content:'';
+  position:absolute;
+  width:16px;
+  height:16px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.6s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* Responsive */
+@media (max-width:600px){
+  body{
+    padding:20px 12px;
+  }
+  
+  .card{
+    padding:24px 20px;
+  }
+  
+  .card h2{
+    font-size:26px;
+  }
+  
+  .button-group{
+    flex-direction:column-reverse;
+  }
+  
+  .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <!-- Back Button -->
+  <button class="back-btn" onclick="history.back()">
+    <span style="font-size:18px">←</span>
+    <span>Go Back</span>
+  </button>
+
+  <!-- Card -->
+  <div class="card">
+    <h2>
+      <span style="font-size:36px">❌</span>
+      <span>Reject Report</span>
+    </h2>
+    
+    <p class="subtitle">
+      Please provide a detailed reason for rejecting this e-waste report. 
+      Your feedback will help improve the assessment process.
+    </p>
+
+    <div class="alert alert-warning" id="warningAlert" style="display:none">
+      <span style="font-size:20px">⚠️</span>
+      <span>Please provide a meaningful reason (minimum 20 characters)</span>
+    </div>
+
+    <form method="post" id="rejectForm" onsubmit="return handleSubmit(event)">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label class="form-label">
+            Reason for Rejection
+            <span class="required">*</span>
+          </label>
+          
+          <textarea 
+            name="feedback" 
+            id="feedback"
+            class="form-textarea"
+            placeholder="Explain why you're rejecting this report... (e.g., estimated value is too low, working parts assessment is incorrect, etc.)"
+            required
+            oninput="updateCharCount()"
+            minlength="20"
+            maxlength="500"></textarea>
+          
+          <div class="char-counter" id="charCounter">
+            <span id="charCount">0</span> / 500 characters
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <span style="font-size:18px">💡</span>
+          <span>Tip: Be specific about what you disagree with to help the vendor understand your concerns.</span>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn btn-secondary" onclick="history.back()">
+            <span>↩️</span>
+            <span>Cancel</span>
+          </button>
+          
+          <button type="submit" class="btn btn-danger" id="submitBtn">
+            <span style="font-size:18px">📤</span>
+            <span>Submit Rejection</span>
+          </button>
+        </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Character counter
+function updateCharCount() {
+  const textarea = document.getElementById('feedback');
+  const charCount = document.getElementById('charCount');
+  const charCounter = document.getElementById('charCounter');
+  const warningAlert = document.getElementById('warningAlert');
+  const count = textarea.value.length;
+  
+  charCount.textContent = count;
+  
+  // Update counter color
+  if (count >= 450) {
+    charCounter.className = 'char-counter error';
+  } else if (count >= 400) {
+    charCounter.className = 'char-counter warning';
+  } else {
+    charCounter.className = 'char-counter';
+  }
+  
+  // Show/hide warning
+  if (count > 0 && count < 20) {
+    warningAlert.style.display = 'flex';
+  } else {
+    warningAlert.style.display = 'none';
+  }
+}
+
+// Form submission
+function handleSubmit(event) {
+  const textarea = document.getElementById('feedback');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  if (textarea.value.trim().length < 20) {
+    event.preventDefault();
+    document.getElementById('warningAlert').style.display = 'flex';
+    textarea.focus();
+    return false;
+  }
+  
+  // Show confirmation
+  if (!confirm('Are you sure you want to reject this report? This action cannot be undone.')) {
+    event.preventDefault();
+    return false;
+  }
+  
+  // Show loading state
+  submitBtn.classList.add('btn-loading');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>Submitting...</span>';
+  
+  return true;
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  updateCharCount();
+  
+  // Auto-focus textarea
+  document.getElementById('feedback').focus();
+});
+
+// Prevent accidental navigation
+window.addEventListener('beforeunload', function(e) {
+  const textarea = document.getElementById('feedback');
+  if (textarea.value.trim().length > 0) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+</script>
+
+</body>
+</html>

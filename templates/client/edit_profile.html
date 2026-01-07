@@ -1,0 +1,306 @@
+<!-- <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Profile</button>
+</form> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recyclo - Edit Profile</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2196F3, #4CAF50);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links { display: flex; gap: 1rem; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+
+        /* Container */
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* Card */
+        .card { 
+            background: white; 
+            border-radius: 8px; 
+            padding: 2rem; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .card h2 { 
+            margin-bottom: 1.5rem; 
+            color: #333; 
+            display: flex; 
+            align-items: center; 
+            font-size: 1.5rem;
+        }
+        .card-icon { margin-right: 0.5rem; font-size: 1.5rem; }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Form styles */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: bold; 
+            color: #333; 
+            font-size: 0.95rem;
+        }
+        .form-input, .form-select, .form-textarea { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 2px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 1rem;
+            font-family: Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { 
+            border-color: #2196F3; 
+            outline: none; 
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* File Upload */
+        .file-upload-container {
+            border: 2px dashed #2196F3;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9ff;
+            transition: background 0.3s;
+        }
+        .file-upload-container:hover { background: #f0f8ff; }
+        .file-upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .file-upload-text { color: #666; font-size: 0.9rem; }
+
+        /* Current Photo Display */
+        .current-photo {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .current-photo img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .current-photo-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .btn { 
+            padding: 0.75rem 1.5rem; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #2196F3, #1976D2); 
+            color: white; 
+            flex: 1;
+        }
+        .btn-secondary { 
+            background: #6c757d; 
+            color: white; 
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Helper text */
+        .form-help {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Grid for two columns */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">♻️ Recyclo - Edit Profile</div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">🏠 Home</a>
+            <a href="{% url 'save_client_profile' %}">👤 Profile</a>
+            <a href="{% url 'logout' %}">🔒 Logout</a>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <div class="card">
+            <h2><span class="card-icon">👤</span>Edit Your Profile</h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Profile Photo -->
+                <div class="form-group">
+                    <label class="form-label">Profile Photo</label>
+                    
+                    {% if form.instance.profile_photo %}
+                        <div class="current-photo">
+                            <img src="{{ form.instance.profile_photo.url }}" alt="Current Profile Photo">
+                            <div class="current-photo-label">Current Photo</div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="file-upload-container" id="fileUploadContainer" onclick="document.getElementById('id_profile_photo').click()">
+                        <div class="file-upload-icon">📷</div>
+                        <div class="file-upload-text">Click to upload profile photo</div>
+                    </div>
+                    {{ form.profile_photo }}
+                    <div class="form-help">Recommended: Square image, at least 400x400px (JPG, PNG)</div>
+                    {% if form.profile_photo.errors %}
+                        <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.profile_photo.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Gender and Date of Birth -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="id_gender">Gender</label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.gender.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_date_of_birth">Date of Birth</label>
+                        {{ form.date_of_birth }}
+                        {% if form.date_of_birth.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.date_of_birth.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                    <label class="form-label" for="id_address">Address</label>
+                    {{ form.address }}
+                    <div class="form-help">Your full address for pickup and delivery services</div>
+                    {% if form.address.errors %}
+                        <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Buttons -->
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Save Profile
+                    </button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">
+                        ❌ Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Hide the default file input
+        document.getElementById('id_profile_photo').style.display = 'none';
+
+        // Preview profile photo
+        document.getElementById('id_profile_photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('fileUploadContainer');
+            
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    container.innerHTML = `
+                        <img src="${event.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <div style="color: #4CAF50; font-weight: bold;">✓ ${file.name}</div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Style the gender select dropdown
+        const genderSelect = document.getElementById('id_gender');
+        if(genderSelect) {
+            genderSelect.className = 'form-select';
+        }
+
+        // Style the date input
+        const dateInput = document.getElementById('id_date_of_birth');
+        if(dateInput) {
+            dateInput.className = 'form-input';
+        }
+
+        // Style the address textarea
+        const addressField = document.getElementById('id_address');
+        if(addressField) {
+            if(addressField.tagName === 'TEXTAREA') {
+                addressField.className = 'form-textarea';
+            } else {
+                addressField.className = 'form-input';
+            }
+        }
+    </script>
+</body>
+</html>

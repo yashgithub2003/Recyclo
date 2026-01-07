@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Detect Location</title>
+
+<style>
+body{
+  font-family:system-ui;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background:#0f172a;
+  color:#fff;
+}
+
+.card{
+  background:#111827;
+  padding:30px;
+  border-radius:16px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+
+button{
+  padding:14px 24px;
+  font-size:16px;
+  border:none;
+  border-radius:12px;
+  background:#00d4a6;
+  color:#000;
+  cursor:pointer;
+  font-weight:700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Enable Location</h2>
+  <p>We need your location to find nearby e-waste pickups.</p>
+  <button onclick="getLocation()">Detect My Location</button>
+</div>
+
+<script>
+function getLocation(){
+  if(!navigator.geolocation){
+    alert("Geolocation is not supported by your browser");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position){
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Redirect to Django view
+      window.location.href =
+        `/collector/nearby-pickups/?lat=${lat}&lng=${lng}`;
+    },
+    function(error){
+      alert("Location access denied or unavailable.");
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:10000,
+      maximumAge:0
+    }
+  );
+}
+</script>
+
+</body>
+</html>

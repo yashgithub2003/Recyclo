@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Collector Dashboard — E-Waste Management</title>
+
+<style>
+:root{
+  --primary:#00d4a6;
+  --secondary:#00b4d8;
+  --bg-card:rgba(6,30,40,.78);
+  --glass:rgba(255,255,255,.08);
+  --text-muted:rgba(255,255,255,.75);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Inter",system-ui;
+  color:#eafff6;
+  background:linear-gradient(135deg,#0077b6,#00b4d8,#02c39a);
+  background-size:300% 300%;
+  animation:bg 12s ease infinite;
+}
+
+@keyframes bg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 28px;
+}
+
+.brand{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.logo{
+  width:48px;height:48px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  box-shadow:0 0 22px rgba(0,212,166,.4);
+}
+
+.btn-logout{
+  background:linear-gradient(135deg,#ff6b6b,#ff4d4d);
+  padding:10px 16px;
+  border-radius:12px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+  transition:transform 0.2s;
+}
+
+.btn-logout:hover{
+  transform:translateY(-2px);
+}
+
+.app{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:26px;
+  padding:0 28px 28px;
+}
+
+.sidebar{
+  background:linear-gradient(180deg,rgba(3,22,30,.85),rgba(1,15,25,.9));
+  border-radius:18px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.nav a{
+  display:block;
+  padding:12px 14px;
+  border-radius:12px;
+  color:var(--text-muted);
+  font-weight:600;
+  text-decoration:none;
+  transition:all 0.3s;
+}
+
+.nav a.active,
+.nav a:hover{
+  background:var(--glass);
+  color:#fff;
+  transform:translateX(4px);
+}
+
+.main{display:flex;flex-direction:column;gap:24px}
+
+.profile{
+  display:flex;
+  gap:22px;
+  align-items:center;
+  padding:26px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(2,40,55,.9),rgba(4,55,70,.85));
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+}
+
+.avatar{
+  width:110px;
+  height:110px;
+  border-radius:18px;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  font-weight:900;
+  box-shadow:0 8px 20px rgba(0,212,166,.3);
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.meta h2{margin:0;font-size:22px}
+.meta p{margin:6px 0;color:#c8fff2;font-weight:600}
+
+.details{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:12px;
+  font-size:13px;
+}
+
+.details .label{font-size:12px;opacity:.7}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.card{
+  padding:20px;
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(3,25,35,.85),rgba(2,15,25,.85));
+  transition:transform 0.3s,box-shadow 0.3s;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.15);
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+
+.card h4{
+  margin:0 0 12px 0;
+  font-size:14px;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.card p{
+  margin:0;
+  font-size:28px;
+  font-weight:700;
+  color:var(--primary);
+}
+
+/* Pickup Actions Section */
+.pickup-actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  margin-top:12px;
+}
+
+.action-card{
+  padding:28px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(0,180,216,.15),rgba(0,212,166,.15));
+  border:2px solid var(--glass);
+  transition:all 0.3s;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+
+.action-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(135deg,rgba(0,180,216,.1),rgba(0,212,166,.1));
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.action-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 12px 32px rgba(0,212,166,.3);
+  border-color:var(--primary);
+}
+
+.action-card:hover::before{
+  opacity:1;
+}
+
+.action-icon{
+  width:60px;
+  height:60px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  margin-bottom:16px;
+  box-shadow:0 4px 16px rgba(0,212,166,.3);
+}
+
+.action-content{
+  position:relative;
+  z-index:1;
+}
+
+.action-content h3{
+  margin:0 0 8px 0;
+  font-size:20px;
+  color:#fff;
+}
+
+.action-content p{
+  margin:0;
+  font-size:14px;
+  color:var(--text-muted);
+  line-height:1.6;
+}
+
+.action-card .badge{
+  display:inline-block;
+  margin-top:12px;
+  padding:6px 14px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  font-size:12px;
+  font-weight:700;
+  color:#fff;
+  box-shadow:0 2px 8px rgba(0,212,166,.3);
+}
+
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:rgba(255,255,255,.65);
+  padding:20px 0;
+}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .profile{flex-direction:column;align-items:flex-start}
+  .pickup-actions{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="logo"></div>
+    <div>
+      <h1>AI-Powered E-Waste Management</h1>
+      <div style="font-size:12px;opacity:.8">Collector Dashboard</div>
+    </div>
+  </div>
+  <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+</div>
+
+<div class="app">
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo"></div>
+    <h3>Smart E-Waste</h3>
+  </div>
+  <nav class="nav">
+    <a class="active">Dashboard</a>
+  </nav>
+  <div class="small">
+    Logged in as<br>
+    <strong>{{ collector.first_name }} {{ collector.last_name }}</strong>
+  </div>
+</aside>
+
+<main class="main">
+
+<section class="profile">
+  <div class="avatar">
+    {% if profile and profile.profile_photo %}
+      <img src="{{ profile.profile_photo.url }}" alt="Profile Photo">
+    {% else %}
+      {{ collector.first_name|first|upper }}
+    {% endif %}
+  </div>
+
+  <div class="meta">
+    <h2>{{ collector.first_name }} {{ collector.last_name }}</h2>
+    <p>{{ collector.email }}</p>
+
+    <div class="details">
+      <div>
+        <div class="label">Phone</div>
+        {{ collector.phone_number }}
+      </div>
+      <div>
+        <div class="label">DOB</div>
+        {{ profile.date_of_birth }}
+      </div>
+      <div>
+        <div class="label">Address</div>
+        {{ profile.address }}
+      </div>
+      <div>
+        <div class="label">Joined</div>
+        {{ collector.date_joined|date:"M d, Y" }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h4>Collection Requests</h4>
+    <p>0</p>
+  </div>
+  <div class="card">
+    <h4>ID Verified</h4>
+    <p>{% if profile.id_proof %}Yes{% else %}No{% endif %}</p>
+  </div>
+  <div class="card">
+    <h4>Address</h4>
+    <p>{{ profile.address|truncatechars:20 }}</p>
+  </div>
+  <div class="card">
+    <h4>Joined On</h4>
+    <p>{{ collector.date_joined|date:"M d, Y" }}</p>
+  </div>
+</section>
+
+<!-- Pickup Actions Section -->
+<section class="pickup-actions">
+  <a href="{% url 'get_location' %}" style="text-decoration:none;color:inherit;">
+    <div class="action-card">
+      <div class="action-icon">📍</div>
+      <div class="action-content">
+        <h3>Nearby Pickups</h3>
+        <p>Browse available pickup requests near your location and accept new collection tasks.</p>
+        <span class="badge">View Available</span>
+      </div>
+    </div>
+  </a>
+
+  <a href="{% url 'accepted_pickups' %}" style="text-decoration:none;color:inherit;">
+    <div class="action-card">
+      <div class="action-icon">✅</div>
+      <div class="action-content">
+        <h3>Accepted Pickups</h3>
+        <p>View and manage all pickup requests you have accepted and are scheduled to collect.</p>
+        <span class="badge">Manage</span>
+      </div>
+    </div>
+  </a>
+
+  <a href="{% url 'collected_pickups' %}" style="text-decoration:none;color:inherit;">
+    <div class="action-card">
+      <div class="action-icon">📦</div>
+      <div class="action-content">
+        <h3>Collected Pickups</h3>
+        <p>Review your completed collections and track your pickup history and performance.</p>
+        <span class="badge">View History</span>
+      </div>
+    </div>
+  </a>
+</section>
+
+<div class="footer">© 2025 AI-Powered E-Waste Management System</div>
+
+</main>
+</div>
+
+</body>
+</html>

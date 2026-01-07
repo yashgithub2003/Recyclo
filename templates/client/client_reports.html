@@ -1,0 +1,71 @@
+ {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My E-Waste Reports</title>
+    <style>
+        body { background:#0f172a; color:white; font-family:Arial; padding:30px; }
+        .card {
+            background:#020617;
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.4);
+        }
+        .title { font-size:20px; font-weight:800; color:#00d4a6; }
+        .label { color:#94a3b8; font-size:13px; }
+        .value { font-weight:700; margin-bottom:10px; }
+        .approved { color:#4ade80; font-weight:800; }
+        .pending { color:#facc15; font-weight:800; }
+        .btn {
+            padding:10px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:800;
+            display:inline-block;
+            margin-top:10px;
+        }
+        .btn-approve {
+            background:linear-gradient(90deg,#00d4a6,#00b4d8);
+            color:black;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📄 My E-Waste Reports</h1>
+
+{% for report in reports %}
+<div class="card">
+
+    <div class="title">{{ report.assignment.photo_post.caption }}</div>
+
+    <p><span class="label">Vendor:</span> {{ report.assignment.vendor.company_name }}</p>
+    <p><span class="label">Condition:</span> {{ report.product_condition }}</p>
+    <p><span class="label">Working Parts:</span> {{ report.working_parts }}</p>
+    <p><span class="label">Scrap Parts:</span> {{ report.non_working_parts }}</p>
+    <p><span class="label">Estimated Value:</span> ₹{{ report.estimated_value }}</p>
+    <p><span class="label">Vendor Comment:</span> {{ report.remarks|default:"-" }}</p>
+
+    <p>
+        <span class="label">Status:</span>
+        {% if report.client_approved %}
+            <span class="approved">✔ Approved</span>
+        {% else %}
+            <span class="pending">⏳ Pending Approval</span>
+        {% endif %}
+    </p>
+
+    {% if not report.client_approved %}
+        <a href="{% url 'approve_report' report.id %}" class="btn btn-approve">
+            ✅ Approve Report
+        </a>
+    {% endif %}
+
+</div>
+{% empty %}
+<p>No reports available yet.</p>
+{% endfor %}
+
+</body>
+</html>

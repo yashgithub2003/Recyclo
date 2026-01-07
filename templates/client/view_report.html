@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Waste Report</title>
+
+<style>
+:root{
+  --primary:#00d4a6;
+  --secondary:#00b4d8;
+}
+
+body{
+  font-family:system-ui;
+  background:linear-gradient(135deg,#0077b6,#00b4d8,#02c39a);
+  background-size:300% 300%;
+  animation:bg 12s ease infinite;
+  color:#fff;
+  margin:0;
+  padding:40px 20px;
+  min-height:100vh;
+}
+
+@keyframes bg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
+
+.card{
+  background:rgba(17,24,39,.9);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:32px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.1);
+  animation:fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.card h2{
+  margin:0 0 28px 0;
+  font-size:28px;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-bottom:20px;
+  border-bottom:2px solid rgba(0,212,166,.3);
+}
+
+.row{
+  display:flex;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.row:last-of-type{
+  border-bottom:none;
+}
+
+.row strong{
+  color:#94a3b8;
+  min-width:180px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.row-value{
+  color:#e2e8f0;
+  font-weight:500;
+  flex:1;
+}
+
+/* Estimated Value Highlight */
+.value-highlight{
+  background:linear-gradient(135deg,rgba(0,212,166,.2),rgba(0,180,216,.2));
+  border:2px solid var(--primary);
+  padding:8px 16px;
+  border-radius:12px;
+  color:var(--primary);
+  font-weight:700;
+  font-size:18px;
+  display:inline-block;
+}
+
+/* Divider */
+hr{
+  border:none;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,166,.3),transparent);
+  margin:24px 0;
+}
+
+/* Status Messages */
+.status-message{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:16px 20px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:16px;
+  margin-top:20px;
+}
+
+.status-approved{
+  background:rgba(34,197,94,.15);
+  color:#22c55e;
+  border:2px solid rgba(34,197,94,.3);
+}
+
+.status-rejected{
+  background:rgba(239,68,68,.15);
+  color:#ef4444;
+  border:2px solid rgba(239,68,68,.3);
+}
+
+.feedback-box{
+  background:rgba(239,68,68,.1);
+  padding:14px 18px;
+  border-radius:10px;
+  margin-top:12px;
+  border-left:4px solid #ef4444;
+}
+
+.feedback-box strong{
+  color:#fca5a5;
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+/* Action Buttons */
+.action-buttons{
+  display:flex;
+  gap:16px;
+  margin-top:24px;
+}
+
+.btn{
+  flex:1;
+  padding:14px 24px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:15px;
+  text-align:center;
+  transition:all 0.3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  border:none;
+}
+
+.btn-approve{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(34,197,94,.3);
+}
+
+.btn-approve:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(34,197,94,.5);
+}
+
+.btn-reject{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(239,68,68,.3);
+}
+
+.btn-reject:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(239,68,68,.5);
+}
+
+/* Info Icons */
+.icon-product::before{content:"📦"}
+.icon-vendor::before{content:"🏪"}
+.icon-condition::before{content:"🔧"}
+.icon-working::before{content:"✅"}
+.icon-broken::before{content:"❌"}
+.icon-value::before{content:"💰"}
+.icon-remarks::before{content:"📝"}
+
+/* Responsive */
+@media (max-width:600px){
+  .card{
+    padding:24px 20px;
+  }
+  
+  .card h2{
+    font-size:24px;
+  }
+  
+  .row{
+    flex-direction:column;
+    gap:6px;
+    padding:12px 0;
+  }
+  
+  .row strong{
+    min-width:auto;
+  }
+  
+  .action-buttons{
+    flex-direction:column;
+  }
+  
+  .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+    <h2>📄 E-Waste Report</h2>
+
+    <div class="row">
+      <strong class="icon-product">Product:</strong>
+      <span class="row-value">{{ photo.caption }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-vendor">Vendor:</strong>
+      <span class="row-value">{{ assignment.vendor.company_name }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-condition">Condition:</strong>
+      <span class="row-value">{{ report.product_condition }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-working">Working Parts:</strong>
+      <span class="row-value">{{ report.working_parts }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-broken">Non-Working Parts:</strong>
+      <span class="row-value">{{ report.non_working_parts }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-value">Estimated Value:</strong>
+      <span class="value-highlight">₹{{ report.estimated_value }}</span>
+    </div>
+
+    <div class="row">
+      <strong class="icon-remarks">Vendor Remarks:</strong>
+      <span class="row-value">{{ report.remarks }}</span>
+    </div>
+
+    <hr>
+
+    {% if report.is_approved_by_client == True %}
+        <div class="status-message status-approved">
+          <span style="font-size:24px">✔</span>
+          <span>Approved by you</span>
+        </div>
+
+    {% elif report.is_approved_by_client == False %}
+        <div class="status-message status-rejected">
+          <span style="font-size:24px">❌</span>
+          <span>Rejected by you</span>
+        </div>
+        
+        <div class="feedback-box">
+          <strong>Your Feedback:</strong>
+          <div style="color:#e2e8f0">{{ report.client_feedback }}</div>
+        </div>
+
+    {% else %}
+        <div class="action-buttons">
+            <a href="{% url 'approve_report' report.id %}" class="btn btn-approve"
+               onclick="return confirm('Are you sure you want to approve this report?')">
+               <span style="font-size:20px">✅</span>
+               <span>Approve Report</span>
+            </a>
+
+            <a href="{% url 'reject_report' report.id %}" class="btn btn-reject"
+               onclick="return confirm('Are you sure you want to reject this report?')">
+               <span style="font-size:20px">❌</span>
+               <span>Reject Report</span>
+            </a>
+        </div>
+    {% endif %}
+  </div>
+</div>
+
+</body>
+</html>
