@@ -1,96 +1,80 @@
-♻️ Recyclo – E-Waste Management System
+# ♻️ Recyclo – E-Waste Management System
 
-Recyclo is a full-stack web application designed to streamline the collection, management, and recycling of electronic waste (e-waste). The system connects customers, collectors, and recyclers on a single platform and automates the complete e-waste lifecycle from posting a request to final cost approval.
+> A smart and efficient platform to manage electronic waste collection, recycling, and cost estimation.
 
-🚀 Features
+Recyclo is a full-stack web application designed to streamline the collection, management, and recycling of electronic waste (e-waste). It connects **customers, collectors, and recyclers** on a single platform and automates the complete e-waste lifecycle — from posting a request to final cost approval.
 
-Customer Module
+---
 
-Post e-waste pickup requests
+## 🚀 Key Features
 
-View cost estimates and approve/reject offers
+### 👤 Customer Module
+- Post e-waste pickup requests  
+- View cost estimates  
+- Approve or reject recycler offers  
 
-Collector Module
+### 🚚 Collector Module
+- View available pickup requests  
+- Accept and complete pickups  
+- Deliver e-waste to assigned recyclers  
 
-View available pickup requests
+### 🏭 Recycler Module
+- Receive e-waste from collectors  
+- Generate reports and estimate recycling value  
+- Send price estimates to customers  
 
-Accept and complete pickups
+### 🛠 Admin Dashboard
+- Manage users (Customers, Collectors, Recyclers)  
+- Monitor requests, pickups, and deliveries  
+- View complete system activity and analytics  
 
-Deliver e-waste to assigned recyclers
+---
 
-Recycler Module
+## 🛠 Tech Stack
 
-Receive e-waste from collectors
+| Layer        | Technology                  |
+|-------------|-----------------------------|
+| Frontend    | HTML, CSS, JavaScript        |
+| Backend     | Python, Django               |
+| Database    | SQLite / MySQL               |
+| Architecture| Django MVT                   |
 
-Generate reports and estimate recycling value
+---
 
-Send price estimates to customers
+## 🔄 System Workflow
 
-Admin Dashboard
+1. Customer posts an e-waste request  
+2. System automatically assigns the **nearest recycler**  
+3. Available collector accepts the pickup request  
+4. Collector delivers e-waste to recycler  
+5. Recycler generates report & cost estimate  
+6. Customer approves or rejects the estimate  
+7. If approved → process continues  
+8. If rejected → product is returned  
 
-Manage users (customers, collectors, recyclers)
+---
 
-Monitor requests, pickups, and system activity
+## ⚙️ Installation & Setup
 
-View overall platform analytics
-
-🛠 Tech Stack
-
-Frontend: HTML, CSS, JavaScript
-
-Backend: Python, Django
-
-Database: SQLite (default) / MySQL
-
-Framework: Django (MVT Architecture)
-
-🔄 Workflow
-
-Customer posts an e-waste request
-
-System automatically assigns the nearest recycler
-
-Available collector accepts the pickup request
-
-Collector delivers e-waste to recycler
-
-Recycler generates report and cost estimate
-
-Customer approves or rejects the estimate
-
-If approved → process continues, if rejected → product is returned
-
-⚙️ Installation & Setup
-
-Clone the repository
-
+1️⃣ Clone the Repository
+```bash
 git clone https://github.com/yashgithub2003/Recyclo.git
-cd recyclo
+cd Recyclo
 
-
-Create virtual environment
-
+2️⃣ Create Virtual Environment
 python -m venv env
 source env/bin/activate   # For Linux/Mac
 env\Scripts\activate      # For Windows
 
-
-Install dependencies
-
+3️⃣ Install Dependencies
 pip install -r requirements.txt
 
-
-Apply migrations
-
+4️⃣ Apply Migrations
 python manage.py makemigrations
 python manage.py migrate
 
-
-Run the server
-
+5️⃣ Run the Server
 python manage.py runserver
 
-
-Open in browser:
-
+6️⃣ Open in Browser
 http://127.0.0.1:8000/
