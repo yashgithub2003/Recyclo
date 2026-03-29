@@ -36,7 +36,7 @@ Recyclo is a full-stack web application designed to streamline the collection, m
 |-------------|-----------------------------|
 | Frontend    | HTML, CSS, JavaScript        |
 | Backend     | Python, Django               |
-| Database    | SQLite / MySQL               |
+| Database    | PostgreSQL              |
 | Architecture| Django MVT                   |
 
 ---
